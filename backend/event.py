@@ -28,7 +28,7 @@ class GenerateEvent(RequestHandler):
             body=pic_bin)
 
         response_body = cjson.decode(response.body)
-        tags_ = filter(lambda x: x['confidence'] > 0.5, response_body['tags'])
+        tags_ = filter(lambda x: x['confidence'] > 0.4, response_body['tags'])
         tags_ = map(lambda x: x['name'], tags_)
 
         result_id = yield db.event.insert({
@@ -55,45 +55,46 @@ class CheckEvent(RequestHandler):
         lon_ = body['lon']
         lat_ = body['lat']
         pic_bin = base64.standard_b64decode(body['pic'])
-        event_id = body['event_id']
         
-        std_event_info = yield db.event.find_one({'_id': ObjectId(event_id)})
-        print std_event_info
+        cursor = db.event.find()
+        while (yield cursor.fetch_next):
+            std_event_info = cursor.next_object()
+            event_id = str(std_event_info['_id'])
 
-        http_client = AsyncHTTPClient()
-        response = yield http_client.fetch('https://api.projectoxford.ai/vision/v1.0/tag',
-            method='POST',
-            headers=MSRA_VISION_API_HEADERS,
-            body=pic_bin)
+            http_client = AsyncHTTPClient()
+            response = yield http_client.fetch('https://api.projectoxford.ai/vision/v1.0/tag',
+                method='POST',
+                headers=MSRA_VISION_API_HEADERS,
+                body=pic_bin)
 
-        response_body = cjson.decode(response.body)
-        tags_ = filter(lambda x: x['confidence'] > 0.5, response_body['tags'])
-        tags_ = set(map(lambda x: x['name'], tags_))
+            response_body = cjson.decode(response.body)
+            tags_ = filter(lambda x: x['confidence'] > 0.5, response_body['tags'])
+            tags_ = set(map(lambda x: x['name'], tags_))
 
-        
-        print tags_, std_event_info['tags']
-        dist = (abs(std_event_info['lon'] - lon_) ** 2 + abs(std_event_info['lat'] - lat_) ** 2) ** 0.5
-        std_component_num = len(std_event_info['tags'])
-        intersect_num = len(tags_ & set(std_event_info['tags']))
-        union_num = len(tags_ | set(std_event_info['tags']))
+            
+            print tags_, std_event_info['tags']
+            dist = (abs(std_event_info['lon'] - lon_) ** 2 + abs(std_event_info['lat'] - lat_) ** 2) ** 0.5
+            std_component_num = len(std_event_info['tags'])
+            intersect_num = len(tags_ & set(std_event_info['tags']))
+            union_num = len(tags_ | set(std_event_info['tags']))
 
-        # match
-        if dist < RADIUS and 1.0 * intersect_num / std_component_num > CAP_THRESHOLD:
-            # TODO: multiplayer
-            db.user_event.update(
-                {"event_id": ObjectId(event_id)},
-                {"$set": {"event_id": event_id, "accepted": 1} },
-                upsert=True
-            )
-            self.write(cjson.encode({"accepted": 1}))
-        else:
-            # TODO: multiplayer
-            db.user_event.update(
-                {"event_id": ObjectId(event_id)},
-                {"$set": {"event_id": event_id, "accepted": 0} },
-                upsert=True
-            )
-            self.write(cjson.encode({"accepted": 0}))
+            # match
+            if dist < RADIUS and 1.0 * intersect_num / union_num > CAP_THRESHOLD:
+                # TODO: multiplayer
+                db.user_event.update(
+                    {"event_id": ObjectId(event_id)},
+                    {"$set": {"event_id": event_id, "accepted": 1} },
+                    upsert=True
+                )
+                self.write(cjson.encode({"accepted": 1}))
+            else:
+                # TODO: multiplayer
+                db.user_event.update(
+                    {"event_id": ObjectId(event_id)},
+                    {"$set": {"event_id": event_id, "accepted": 0} },
+                    upsert=True
+                )
+                self.write(cjson.encode({"accepted": 0}))
 
             
 

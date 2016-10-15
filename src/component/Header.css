@@ -1,0 +1,15 @@
+.header-leave {
+    -webkit-animation: 1s fadeOutUp;
+    -moz-animation: 1s fadeOutUp;
+    -o-animation: 1s fadeOutUp;
+    animation: 1s fadeOutUp;
+    z-index: 10;
+}
+
+.header-enter {
+    -webkit-animation: 1s fadeInDown;
+    -moz-animation: 1s fadeInDown;
+    -o-animation: 1s fadeInDown;
+    animation: 1s fadeInDown;
+    z-index: 10;
+}

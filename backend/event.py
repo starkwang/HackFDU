@@ -116,12 +116,24 @@ class ViewEvent(RequestHandler):
             if isinstance(event_id, str) is True:
                 results = yield db.event.find_one({'_id': ObjectId(event_id)})
                 results['_id'] = str(results['_id'])
+                user_event = yield db.user_event.find_one({"event_id": event_id})
+                if user_event is None:
+                    accepted = 0
+                else:
+                    accepted = user_event['accepted']
+                results['accepted'] = accepted
             elif isinstance(event_id, list) is True:
                 results = []
                 for eid in event_id:
                     result = yield db.event.find_one({'_id': ObjectId(eid)})
                     result['_id'] = str(result['_id'])
                     results.append(result)
+                    user_event = yield db.user_event.find_one({"event_id": event_id})
+                    if user_event is None:
+                        accepted = 0
+                    else:
+                        accepted = user_event['accepted']
+                    results[-1]['accepted'] = accepted
         except KeyError:
             results = []
             cursor = db.event.find()

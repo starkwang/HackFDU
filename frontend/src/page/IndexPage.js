@@ -6,6 +6,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import GoogleMap from 'google-map-react';
 import eventProxy from '../service/event';
 import api from '../service/api';
+import minilize from '../service/minilize';
 const K_WIDTH = 20;
 const K_HEIGHT = 20;
 
@@ -31,14 +32,6 @@ const greatPlaceStyle = {
 };
 
 function createMapOptions(maps) {
-    // next props are exposed at maps "Animation", "ControlPosition",
-    // "MapTypeControlStyle", "MapTypeId", "NavigationControlStyle",
-    // "ScaleControlStyle", "StrokePosition", "SymbolPath", "ZoomControlStyle",
-    // "DirectionsStatus", "DirectionsTravelMode", "DirectionsUnitSystem",
-    // "DistanceMatrixStatus", "DistanceMatrixElementStatus", "ElevationStatus",
-    // "GeocoderLocationType", "GeocoderStatus", "KmlLayerStatus", "MaxZoomStatus",
-    // "StreetViewStatus", "TransitMode", "TransitRoutePreference", "TravelMode",
-    // "UnitSystem"
     return {
         zoomControlOptions: {
             position: maps.ControlPosition.RIGHT_CENTER,
@@ -71,43 +64,55 @@ export default class IndexPage extends React.Component {
             })
         })
 
-        //获取自身位置
-        // navigator
-        //     .geolocation
-        //     .getCurrentPosition((result, err) => {
-        //         if(err) {
+        // 获取自身位置
+        navigator
+            .geolocation
+            .getCurrentPosition((result, err) => {
+                if(err) {
 
-        //         }
-        //         console.log(result);
-        //         this.setState(Object.assign(this.state, {
-        //             myLocation: {
-        //                 lat: result.coords.latitude,
-        //                 lng: result.coords.longitude
-        //             }
-        //         }))
-        //     })
+                }
+                console.log(result);
+                this.setState(Object.assign(this.state, {
+                    myLocation: {
+                        lat: result.coords.latitude,
+                        lng: result.coords.longitude
+                    }
+                }))
+            })
         this.setState(Object.assign(this.state, {
             myLocation: {
-                lat: 31.3015892,
-                lng: 121.5011383
+                lat: 31.297500,
+                lng: 121.4995383
             }
         }))
 
         //上传图片
         var input = document.getElementById('img-input');
-        input.addEventListener('change', function(){
+        input.addEventListener('change', function () {
             var file = this.files[0];
             var reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function (e) {
-                var base64 = this.result.split(',')[1];
-                eventProxy.emit('show uploading');
-                api.point.check({
-                    lat: 31.3015892,
-                    lng: 121.5011383,
-                    base64: base64
-                }).then(result => {
-                    eventProxy.emit('hide uploading');
+                minilize(this.result, mini => {
+                    eventProxy.emit('show uploading');
+                    api.point.check({
+                        lat: 31.3015892,
+                        lng: 121.5011383,
+                        base64: mini.split(',')[1]
+                    }).then(result => {
+                        eventProxy.emit('hide uploading');
+                        var result = JSON.parse(result);
+                        if (result.accepted == 1) {
+                            console.log('show alert');
+                            eventProxy.emit('point complete', result['event_id'])
+                        } else {
+                            console.log('show alert');
+                            eventProxy.emit('show alert', '验证失败');
+                        }
+                    }).catch(err => {
+                        eventProxy.emit('hide uploading');
+                        console.log(err);
+                    })
                 })
             }
         }, false);
@@ -170,7 +175,20 @@ class MyGreatPlace extends React.Component {
             if(data.id != this.props.id && this.state.showDetail){
                 this.hideDetail();
             }
-        })
+        });
+        eventProxy.on('point complete', id => {
+            console.log('point complete:', id, this.props.id);
+            if(id == this.props.id){
+                if(!this.state.complete){
+                    eventProxy.emit('show alert', '验证成功');
+                    this.setState(Object.assign(this.state, {
+                        complete: true
+                    }));
+                }else{
+                    eventProxy.emit('show alert', '已经验证过了');
+                }
+            }
+        });
     }
     showDetail() {
         if(this.props.me){
@@ -179,10 +197,10 @@ class MyGreatPlace extends React.Component {
         eventProxy.emit('show point info', {
             id: this.props.id
         })
-        this.setState({ showDetail: true })
+        this.setState(Object.assign(this.state, { showDetail: true }));
     }
     hideDetail() {
-        setTimeout(_ => this.setState({ showDetail: false }), 500);
+        setTimeout(_ => this.setState(Object.assign(this.state, { showDetail: false })), 200);
     }
     render() {
         var info = this.state.showDetail ? (<div className='point-info-box'>
@@ -191,7 +209,7 @@ class MyGreatPlace extends React.Component {
         </div>) : undefined;
         return (
             <div style={greatPlaceStyle} onClick={this.showDetail.bind(this)}>
-                {this.props.text}
+                {this.state.complete? '√' :this.props.text}
                 <ReactCSSTransitionGroup
                     component="div"
                     transitionName="point-info"

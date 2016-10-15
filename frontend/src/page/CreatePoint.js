@@ -26,8 +26,8 @@ export default class CreatePoint extends React.Component {
                 minilize(this.result, mini => {
                     console.log(mini.split(',')[1].length);
                     api.point.create({
-                        lat: 31.3015892,
-                        lng: 121.5011383,
+                        lat: 31.3015892 + Math.random()*0.01,
+                        lng: 121.5011383 + Math.random()*0.01,
                         base64: mini.split(',')[1],
                         intro: intro.value
                     }).then(result => {

@@ -64,7 +64,7 @@ export default class IndexPage extends React.Component {
             })
         })
 
-        获取自身位置
+        // 获取自身位置
         navigator
             .geolocation
             .getCurrentPosition((result, err) => {

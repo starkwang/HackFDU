@@ -1,3 +1,5 @@
+import os
+
 RADIUS = 0.001
 
 MSRA_VISION_API_HEADERS = {
@@ -14,3 +16,6 @@ PREV_DIR = "previews"
 
 # the ratio of tags that match
 CAP_THRESHOLD = 0.5
+
+# static files directory
+STATIC_PATH = os.path.abspath('../frontend/build')

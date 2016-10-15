@@ -1,6 +1,7 @@
 import tornado.ioloop
 import tornado.web
 from event import GenerateEvent, CheckEvent
+from config import STATIC_PATH
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -10,9 +11,9 @@ class MainHandler(tornado.web.RequestHandler):
 
 def make_app():
     return tornado.web.Application([
-        (r"/", MainHandler),
         (r'/new_event', GenerateEvent),
         (r'/check_event', CheckEvent),
+        (r'/(.*)', tornado.web.StaticFileHandler, {'path': STATIC_PATH}),
     ])
 
 

@@ -14,6 +14,7 @@ import IndexPage from './page/IndexPage';
 import MissionsPage from './page/MissionsPage';
 import CreatePoint from './page/CreatePoint';
 import MissionDetail from './page/MissionDetail';
+import Archievement from './page/Archievement';
 import logo from './logo.svg';
 import './App.css';
 import './css/animate.css';
@@ -28,6 +29,7 @@ class App extends Component {
                         <Route path="/missions" component={MissionsPage}/>
                         <Route path="/createPoint" component={CreatePoint}/>
                         <Route path="/missionDetail/:id" component={MissionDetail}/>
+                        <Route path="/archievement" component={Archievement}/>
                         <Redirect from="index.html" to="/" />
                     </Route>
                 </Router>

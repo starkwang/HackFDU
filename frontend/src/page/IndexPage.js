@@ -7,6 +7,7 @@ import GoogleMap from 'google-map-react';
 import eventProxy from '../service/event';
 import api from '../service/api';
 import minilize from '../service/minilize';
+import pointStatus from '../service/status';
 const K_WIDTH = 20;
 const K_HEIGHT = 20;
 
@@ -122,9 +123,10 @@ export default class IndexPage extends React.Component {
         input.click();
     }
     render() {
+        var nowPoint = this.state.points[pointStatus.nowPoint];
         return (
             <div style={{
-                height: 500
+                height: 603
             }}>
                 <GoogleMap
                     apiKey='AIzaSyCidAWtTBVBBMfjVnW4Qce_qygOazWpLz0'
@@ -141,15 +143,15 @@ export default class IndexPage extends React.Component {
                     {
                         this.state.points.map((point, index) => (
                             <MyGreatPlace lat={point.lat} lng={point.lon} id={point.id} info={point.info} text={index} key={index} accepted={point.accepted}/>
-                        )) 
+                        ))
                     }
                 </GoogleMap>
                 <FloatingActionButton 
                     style={{
                         position: 'absolute',
                         zIndex: 999,
-                        bottom: 0,
-                        right:0
+                        bottom: 50,
+                        right: 30
                     }}
                     onClick={this.checkImg}
                 >
@@ -181,10 +183,17 @@ class MyGreatPlace extends React.Component {
             console.log('point complete:', id, this.props.id);
             if(id == this.props.id){
                 if(!this.state.complete){
-                    eventProxy.emit('show alert', '验证成功');
                     this.setState(Object.assign(this.state, {
                         complete: true
                     }));
+                    api.point.getAll().then(result => {
+                        var length = result.data.points.filter(p => !p.accepted).length;
+                        if (length == 0) {
+                            eventProxy.emit('show alert', '恭喜！完成！');
+                        } else {
+                            eventProxy.emit('show alert', `加油，还剩${length}个！`);
+                        }
+                    });
                 }else{
                     eventProxy.emit('show alert', '已经验证过了');
                 }

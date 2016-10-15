@@ -97,5 +97,21 @@ class CheckEvent(RequestHandler):
 
             
 
+class ViewEvent(RequestHandler):
 
+    @gen.coroutine
+    def post(self):
+        body = cjson.decode(self.request.body)
+        event_id = body['event_id']
 
+        if isinstance(event_id, str) is True:
+            results = yield db.event.find_one({'_id': ObjectId(event_id)})
+            results['_id'] = str(results['_id'])
+        elif isinstance(event_id, list) is True:
+            results = []
+            for eid in event_id:
+                result = yield db.event.find_one({'_id': ObjectId(eid)})
+                result['_id'] = str(result['_id'])
+                results.append(result)
+
+        self.write(cjson.encode(results))

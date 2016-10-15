@@ -140,7 +140,7 @@ export default class IndexPage extends React.Component {
                     }
                     {
                         this.state.points.map((point, index) => (
-                            <MyGreatPlace lat={point.lat} lng={point.lon} id={point.id} info={point.info} text={index} key={index}/>
+                            <MyGreatPlace lat={point.lat} lng={point.lon} id={point.id} info={point.info} text={index} key={index} accepted={point.accepted}/>
                         )) 
                     }
                 </GoogleMap>
@@ -167,7 +167,8 @@ class MyGreatPlace extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showDetail: false
+            showDetail: false,
+            complete: !!this.props.accepted
         }
     }
     componentDidMount(){

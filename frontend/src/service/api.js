@@ -56,7 +56,7 @@ var point = {
                 data: {
                     points: JSON
                         .parse(result)
-                        .map(point => ({id: point._id, info: point.intro, lat: point.lat, lon: point.lon}))
+                        .map(point => ({id: point._id, info: point.intro, lat: point.lat, lon: point.lon, accepted: point.accepted}))
                 }
             }
         });

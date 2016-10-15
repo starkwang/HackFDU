@@ -31,5 +31,5 @@ def make_app():
 if __name__ == "__main__":
     app = make_app()
     http_server = tornado.httpserver.HTTPServer(app)
-    http_server.listen(8000)
+    http_server.listen(8000, address='0.0.0.0')
     tornado.ioloop.IOLoop.current().start()

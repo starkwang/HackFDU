@@ -41,7 +41,14 @@ function fakeRequest(data, timeout) {
 }
 
 var point = {
-    create: () => {},
+    create: (data) => {
+        return POST('/new_event', {
+            lon: data.lng,
+            lat: data.lat,
+            intro: data.intro,
+            pic: data.base64
+        })
+    },
     get: () => {},
     getAll: () => fakeRequest({
         data: {
@@ -63,9 +70,14 @@ var point = {
         }
     }, 2000),
     check: (data) => {
-        return fakeRequest({
-            staus: 1
-        }, 15000)
+        // return fakeRequest({
+        //     staus: 1
+        // }, 15000)
+        return POST('/check_event', {
+            lon: data.lng,
+            lat: data.lat,
+            pic: data.base64
+        })
     }
 }
 

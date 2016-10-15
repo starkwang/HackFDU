@@ -78,22 +78,25 @@ class CheckEvent(RequestHandler):
             intersect_num = len(tags_ & set(std_event_info['tags']))
             union_num = len(tags_ | set(std_event_info['tags']))
 
+            found = False
             # match
             if dist < RADIUS and 1.0 * intersect_num / union_num > CAP_THRESHOLD:
                 # TODO: multiplayer
+                obj = yield db.user_event.find_one({"event_id": ObjectId(event_id), "accepted": 1})
+                # event has been archived
+                if obj is not None:
+                    continue
                 db.user_event.update(
-                    {"event_id": ObjectId(event_id)},
+                    {"event_id": ObjectId(event_id), "accepted": 0},
                     {"$set": {"event_id": event_id, "accepted": 1} },
                     upsert=True
                 )
-                self.write(cjson.encode({"accepted": 1}))
+                found = True
+                break
+
+            if found:
+                self.write(cjson.encode({"accepted": 1, "event_id": event_id}))
             else:
-                # TODO: multiplayer
-                db.user_event.update(
-                    {"event_id": ObjectId(event_id)},
-                    {"$set": {"event_id": event_id, "accepted": 0} },
-                    upsert=True
-                )
                 self.write(cjson.encode({"accepted": 0}))
 
             
@@ -103,16 +106,23 @@ class ViewEvent(RequestHandler):
     @gen.coroutine
     def post(self):
         body = cjson.decode(self.request.body)
-        event_id = body['event_id']
+        try:
+            event_id = body['event_id']
 
-        if isinstance(event_id, str) is True:
-            results = yield db.event.find_one({'_id': ObjectId(event_id)})
-            results['_id'] = str(results['_id'])
-        elif isinstance(event_id, list) is True:
+            if isinstance(event_id, str) is True:
+                results = yield db.event.find_one({'_id': ObjectId(event_id)})
+                results['_id'] = str(results['_id'])
+            elif isinstance(event_id, list) is True:
+                results = []
+                for eid in event_id:
+                    result = yield db.event.find_one({'_id': ObjectId(eid)})
+                    result['_id'] = str(result['_id'])
+                    results.append(result)
+        except KeyError:
             results = []
-            for eid in event_id:
-                result = yield db.event.find_one({'_id': ObjectId(eid)})
-                result['_id'] = str(result['_id'])
-                results.append(result)
+            cursor = db.event.find()
+            while (yield cursor.fetch_next):
+                results.append(cursor.next_object())
+                results[-1]['_id'] = str(results[-1]['_id'])
 
         self.write(cjson.encode(results))

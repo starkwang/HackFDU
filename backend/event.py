@@ -94,10 +94,10 @@ class CheckEvent(RequestHandler):
                 found = True
                 break
 
-            if found:
-                self.write(cjson.encode({"accepted": 1, "event_id": event_id}))
-            else:
-                self.write(cjson.encode({"accepted": 0}))
+        if found:
+            self.write(cjson.encode({"accepted": 1, "event_id": event_id}))
+        else:
+            self.write(cjson.encode({"accepted": 0}))
 
             
 

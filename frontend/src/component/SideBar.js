@@ -50,6 +50,7 @@ export default class SideBar extends React.Component {
                     主页
                 </MenuItem>
                 <MenuItem leftIcon={<PublishIcon/>} onTouchTap={_ => this.toRoute('/missions')}>任务列表</MenuItem>
+                <MenuItem leftIcon={<PublishIcon/>} onTouchTap={_ => this.toRoute('/createPoint')}>创建地点</MenuItem>
                 <Divider/>
                 <Subheader>分类</Subheader>
                 <MenuItem leftIcon={<CategoryIcon0 />}>

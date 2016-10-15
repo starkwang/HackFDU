@@ -101,10 +101,13 @@ export default class IndexPage extends React.Component {
             reader.readAsDataURL(file);
             reader.onload = function (e) {
                 var base64 = this.result.split(',')[1];
+                eventProxy.emit('show uploading');
                 api.point.check({
                     lat: 31.3015892,
                     lng: 121.5011383,
                     base64: base64
+                }).then(result => {
+                    eventProxy.emit('hide uploading');
                 })
             }
         }, false);

@@ -14,7 +14,7 @@ function POST(url, data) {
                     resolve(res);
                 }
             });
-    }).then(res => res.body);
+    }).then(res => res.xhr.response);
 }
 
 function GET(url, params) {
@@ -50,37 +50,19 @@ var point = {
         })
     },
     get: () => {},
-    getAll: () => fakeRequest({
-        data: {
-            points: [
-                {
-                    id: '18020a220bfe51bde1561445',
-                    lat: 31.3084892,
-                    lon: 121.5019383,
-                    info: 'info0'
-                }, {
-                    id: '28020a220bfe51bde1562445',
-                    lat: 31.301500,
-                    lon: 121.51238143,
-                    info: 'info1'
-                }, {
-                    id: '38020a220bfe56bde1561445',
-                    lat: 31.227357,
-                    lon: 121.498243,
-                    info: 'info2'
-                }, {
-                    id: '48020a220bfe515de1561445',
-                    lat: 31.227457,
-                    lon: 121.488343,
-                    info: 'info3'
+    getAll: () => {
+        return POST('/view_event', {}).then(result => {
+            return {
+                data: {
+                    points: JSON
+                        .parse(result)
+                        .map(point => ({id: point._id, info: point.intro, lat: point.lat, lon: point.lon}))
                 }
-            ]
-        }
-    }, 2000),
+            }
+        });
+    },
     check: (data) => {
-        // return fakeRequest({
-        //     staus: 1
-        // }, 15000)
+        // return fakeRequest({     staus: 1 }, 15000)
         return POST('/check_event', {
             lon: data.lng,
             lat: data.lat,
@@ -90,10 +72,9 @@ var point = {
 }
 
 var mission = {
-    create: () => {},
     get: () => {},
     getList: () => {
-        return Promise.resolve({})
+        return POST('/view_mission').resolve({})
     }
 }
 

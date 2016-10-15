@@ -15,4 +15,5 @@
 }
 .header {
     transition: all 1s;
+    position: fixed !important;
 }

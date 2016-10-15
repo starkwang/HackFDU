@@ -1,9 +1,8 @@
 import 'image-compressor';
-var imageCompressor = new ImageCompressor;
-
+var imageCompressor = new window.ImageCompressor();
 var compressorSettings = {
-    toWidth: 500,
-    toHeight: 500,
+    toWidth: 400,
+    toHeight: 300,
     mimeType: 'image/png',
     mode: 'strict',
     quality: 0.6

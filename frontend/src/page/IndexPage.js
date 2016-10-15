@@ -1,8 +1,8 @@
 import React from 'react';
-import {AppBar} from 'material-ui';
+import {AppBar, RaisedButton} from 'material-ui';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import GoogleMap from 'google-map-react';
 import eventProxy from '../service/event';
 import api from '../service/api';
@@ -131,11 +131,11 @@ export default class IndexPage extends React.Component {
                     defaultZoom={14}
                     options={createMapOptions}>
                     {
-                        this.state.myLocation? <MyGreatPlace lat={this.state.myLocation.lat} lng={this.state.myLocation.lng} text="我"/>:null
+                        this.state.myLocation? <MyGreatPlace me={true} lat={this.state.myLocation.lat} lng={this.state.myLocation.lng} text="我"/>:null
                     }
                     {
                         this.state.points.map((point, index) => (
-                            <MyGreatPlace lat={point.lat} lng={point.lng} text={index} key={index}/>
+                            <MyGreatPlace lat={point.lat} lng={point.lon} id={point.id} info={point.info} text={index} key={index}/>
                         )) 
                     }
                 </GoogleMap>
@@ -159,10 +159,46 @@ export default class IndexPage extends React.Component {
 }
 
 class MyGreatPlace extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showDetail: false
+        }
+    }
+    componentDidMount(){
+        eventProxy.on('show point info', data => {
+            if(data.id != this.props.id && this.state.showDetail){
+                this.hideDetail();
+            }
+        })
+    }
+    showDetail() {
+        if(this.props.me){
+            return;
+        }
+        eventProxy.emit('show point info', {
+            id: this.props.id
+        })
+        this.setState({ showDetail: true })
+    }
+    hideDetail() {
+        setTimeout(_ => this.setState({ showDetail: false }), 500);
+    }
     render() {
+        var info = this.state.showDetail ? (<div className='point-info-box'>
+            {this.props.info}
+            <RaisedButton onClick={this.hideDetail.bind(this)} className='point-info-box-button' label="好的" primary={true} style={{margin:12}} />
+        </div>) : undefined;
         return (
-            <div style={greatPlaceStyle}>
+            <div style={greatPlaceStyle} onClick={this.showDetail.bind(this)}>
                 {this.props.text}
+                <ReactCSSTransitionGroup
+                    component="div"
+                    transitionName="point-info"
+                    transitionEnterTimeout={800}
+                    transitionLeaveTimeout={800}>
+                    {info}
+                </ReactCSSTransitionGroup>
             </div>
         );
     }

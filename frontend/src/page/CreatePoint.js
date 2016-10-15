@@ -21,16 +21,20 @@ export default class CreatePoint extends React.Component {
             var reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function (e) {
-                var base64 = this.result.split(',')[1];
                 eventProxy.emit('show uploading');
-                minilize(base64, mini => {
+                console.log(this.result.length);
+                minilize(this.result, mini => {
+                    console.log(mini.split(',')[1].length);
                     api.point.create({
                         lat: 31.3015892,
                         lng: 121.5011383,
-                        base64: base64,
+                        base64: mini.split(',')[1],
                         intro: intro.value
                     }).then(result => {
                         eventProxy.emit('hide uploading');
+                    }).catch(err => {
+                        eventProxy.emit('hide uploading');
+                        alert('超时！');
                     })
                 })
             }

@@ -1,3 +1,41 @@
-#img-input{
+#img-input {
     background-color: #333;
+}
+
+.point-info-leave {
+    -webkit-animation: 1s fadeOutUp;
+    -moz-animation: 1s fadeOutUp;
+    -o-animation: 1s fadeOutUp;
+    animation: 1s fadeOutUp;
+    z-index: 10;
+}
+
+.point-info-enter {
+    -webkit-animation: 1s fadeInDown;
+    -moz-animation: 1s fadeInDown;
+    -o-animation: 1s fadeInDown;
+    animation: 1s fadeInDown;
+    z-index: 10;
+}
+
+.point-info {
+    transition: all 1s;
+}
+
+.point-info-box {
+    position: absolute;
+    top: -200px;
+    left: 0;
+    z-index: 999;
+    width: 200px;
+    height: 200px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.156863) 0px 3px 10px, rgba(0, 0, 0, 0.227451) 0px 3px 10px;
+    border-radius: 2px
+}
+
+.point-info-box-button{
+    position: absolute;
+    bottom: 20px;
+    left: 45px;
 }

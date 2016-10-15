@@ -13,3 +13,6 @@
     animation: 1s fadeInDown;
     z-index: 10;
 }
+.header {
+    transition: all 1s;
+}

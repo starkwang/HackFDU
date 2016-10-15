@@ -49,16 +49,16 @@ export default class SideBar extends React.Component {
                 <Subheader>导航</Subheader>
                 <MenuItem leftIcon={< IndexIcon />}>主页</MenuItem>
                 <MenuItem
-                    leftIcon={< PublishIcon />}>发布商品</MenuItem>
+                    leftIcon={< PublishIcon />}>分类</MenuItem>
                 <Divider/>
-                <Subheader>商品分类</Subheader>
+                <Subheader>分类</Subheader>
                 <MenuItem
                     leftIcon={< CategoryIcon0 />}>
-                    手机电脑
+                    分类
                 </MenuItem>
                 <MenuItem
                     leftIcon={< CategoryIcon1 />}>
-                    数码家电
+                    分类
                 </MenuItem>
                 <Divider/>
             </Drawer>

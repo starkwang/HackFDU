@@ -44,7 +44,6 @@ export default class Header extends React.Component {
         eventProxy.emit('show header');
     }
     showSideBar() {
-        console.log('showSideBar');
         eventProxy.emit('show sidebar');
     }
     render() {
@@ -53,11 +52,10 @@ export default class Header extends React.Component {
                 title={this.state.title || 'Title'}
                 key={1}
                 className="header"
-                iconElementLeft={
-                    <IconButton onClick={this.showSideBar}>
-                        <NavigationClose />
-                    </IconButton>
-                }
+                onLeftIconButtonTouchTap={this.showSideBar}
+                style={Object.assign({
+                    transition: 'all 1s'
+                },this.state.color?{backgroundColor: this.state.color} : {})}
             >
             </AppBar>
         );

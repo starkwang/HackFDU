@@ -1,5 +1,6 @@
 import tornado.ioloop
 import tornado.web
+import tornado.httpserver
 from event import GenerateEvent, CheckEvent, ViewEvent
 from mission import GenerateMission, ViewMission
 from event_mission import ViewMissionEvent, AttachEventToMission
@@ -29,5 +30,6 @@ def make_app():
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(8888)
+    http_server = tornado.httpserver.HTTPServer(app)
+    http_server.listen(8000, address='0.0.0.0')
     tornado.ioloop.IOLoop.current().start()

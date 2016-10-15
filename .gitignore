@@ -7,9 +7,16 @@ node_modules
 coverage
 
 # production
-build
 
 # misc
 .DS_Store
 .env
 npm-debug.log
+
+# capture direction
+backend/captures
+# preview direction
+backend/previews
+
+# python files
+*.pyc

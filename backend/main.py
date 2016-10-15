@@ -2,6 +2,7 @@ import tornado.ioloop
 import tornado.web
 from event import GenerateEvent, CheckEvent, ViewEvent
 from mission import GenerateMission, ViewMission
+from event_mission import ViewMissionEvent, AttachEventToMission
 from config import STATIC_PATH
 
 
@@ -18,6 +19,9 @@ def make_app():
 
         (r'/new_mission', GenerateMission),
         (r'/view_mission', ViewMission),
+
+        (r'/attach_event_to_mission', AttachEventToMission),
+        (r'/view_mission_event', ViewMissionEvent),
 
         (r'/(.*)', tornado.web.StaticFileHandler, {'path': STATIC_PATH}),
     ])

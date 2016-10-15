@@ -91,7 +91,7 @@ class CheckEvent(RequestHandler):
                 if obj is not None:
                     continue
                 db.user_event.update(
-                    {"event_id": ObjectId(event_id), "accepted": 0},
+                    {"event_id": event_id, "accepted": 0},
                     {"$set": {"event_id": event_id, "accepted": 1} },
                     upsert=True
                 )
@@ -127,6 +127,13 @@ class ViewEvent(RequestHandler):
             cursor = db.event.find()
             while (yield cursor.fetch_next):
                 results.append(cursor.next_object())
-                results[-1]['_id'] = str(results[-1]['_id'])
+                event_id = str(results[-1]['_id'])
+                results[-1]['_id'] = event_id
+                user_event = yield db.user_event.find_one({"event_id": event_id})
+                if user_event is None:
+                    accepted = 0
+                else:
+                    accepted = user_event['accepted']
+                results[-1]['accepted'] = accepted
 
         self.write(cjson.encode(results))

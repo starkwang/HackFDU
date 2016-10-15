@@ -24,6 +24,7 @@ class App extends Component {
                     <Route path="/" component={Base}>
                         <IndexRoute component={IndexPage}/>
                         <Route path="/missions" component={MissionsPage}/>
+                        <Redirect from="index.html" to="/" />
                     </Route>
                 </Router>
             </MuiThemeProvider>

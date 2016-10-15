@@ -101,8 +101,17 @@ export default class IndexPage extends React.Component {
             reader.readAsDataURL(file);
             reader.onload = function (e) {
                 var base64 = this.result.split(',')[1];
+                api.point.check({
+                    lat: 31.3015892,
+                    lng: 121.5011383,
+                    base64: base64
+                })
             }
         }, false);
+    }
+    checkImg(){
+        var input = document.getElementById('img-input');
+        input.click();
     }
     render() {
         return (
@@ -127,11 +136,19 @@ export default class IndexPage extends React.Component {
                         )) 
                     }
                 </GoogleMap>
+                <FloatingActionButton 
+                    style={{
+                        position: 'absolute',
+                        zIndex: 999,
+                        bottom: 0,
+                        right:0
+                    }}
+                    onClick={this.checkImg}
+                >
+                    <ContentAdd />
+                </FloatingActionButton>
                 <input style={{
-                    position: 'absolute',
-                    zIndex: 999,
-                    bottom: 0,
-                    right:0
+                    display: 'none'
                 }} type="file" id="img-input" />
             </div>
         )

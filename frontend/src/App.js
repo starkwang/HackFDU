@@ -11,6 +11,7 @@ import {
     Redirect
 } from 'react-router';
 import IndexPage from './page/IndexPage';
+import MissionsPage from './page/MissionsPage';
 import logo from './logo.svg';
 import './App.css';
 import './css/animate.css';
@@ -21,6 +22,8 @@ class App extends Component {
             <MuiThemeProvider>
                 <Router history={browserHistory}>
                     <Route path="/" component={Base}>
+                        <IndexRoute component={IndexPage}/>
+                        <Route path="/missions" component={MissionsPage}/>
                     </Route>
                 </Router>
             </MuiThemeProvider>

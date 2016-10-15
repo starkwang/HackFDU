@@ -44,20 +44,18 @@ export default class SideBar extends React.Component {
                 width={200}
                 open={this.state.open}
                 onRequestChange={(open) => this.setState({open})}
-                className="sidebar"
-                >
+                className="sidebar">
                 <Subheader>导航</Subheader>
-                <MenuItem leftIcon={< IndexIcon />}>主页</MenuItem>
-                <MenuItem
-                    leftIcon={< PublishIcon />}>分类</MenuItem>
+                <MenuItem leftIcon={<IndexIcon/>} onTouchTap={_ => this.toRoute('/')}>
+                    主页
+                </MenuItem>
+                <MenuItem leftIcon={<PublishIcon/>} onTouchTap={_ => this.toRoute('/missions')}>任务列表</MenuItem>
                 <Divider/>
                 <Subheader>分类</Subheader>
-                <MenuItem
-                    leftIcon={< CategoryIcon0 />}>
+                <MenuItem leftIcon={<CategoryIcon0 />}>
                     分类
                 </MenuItem>
-                <MenuItem
-                    leftIcon={< CategoryIcon1 />}>
+                <MenuItem leftIcon={<CategoryIcon1 />}>
                     分类
                 </MenuItem>
                 <Divider/>

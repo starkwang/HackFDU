@@ -25,7 +25,9 @@ class GenerateEvent(RequestHandler):
         response = yield http_client.fetch('https://api.projectoxford.ai/vision/v1.0/tag',
             method='POST',
             headers=MSRA_VISION_API_HEADERS,
-            body=pic_bin)
+            body=pic_bin,
+            connect_timeout=20,
+            request_timeout=20)
 
         response_body = cjson.decode(response.body)
         tags_ = filter(lambda x: x['confidence'] > 0.4, response_body['tags'])
@@ -65,7 +67,9 @@ class CheckEvent(RequestHandler):
             response = yield http_client.fetch('https://api.projectoxford.ai/vision/v1.0/tag',
                 method='POST',
                 headers=MSRA_VISION_API_HEADERS,
-                body=pic_bin)
+                body=pic_bin,
+                connect_timeout=20,
+                request_timeout=20)
 
             response_body = cjson.decode(response.body)
             tags_ = filter(lambda x: x['confidence'] > 0.5, response_body['tags'])

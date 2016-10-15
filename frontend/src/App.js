@@ -12,6 +12,7 @@ import {
 } from 'react-router';
 import IndexPage from './page/IndexPage';
 import MissionsPage from './page/MissionsPage';
+import CreatePoint from './page/CreatePoint';
 import logo from './logo.svg';
 import './App.css';
 import './css/animate.css';
@@ -24,6 +25,7 @@ class App extends Component {
                     <Route path="/" component={Base}>
                         <IndexRoute component={IndexPage}/>
                         <Route path="/missions" component={MissionsPage}/>
+                        <Route path="/createPoint" component={CreatePoint}/>
                         <Redirect from="index.html" to="/" />
                     </Route>
                 </Router>

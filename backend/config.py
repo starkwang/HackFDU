@@ -1,6 +1,6 @@
 import os
 
-RADIUS = 0.001
+RADIUS = 0.05
 
 MSRA_VISION_API_HEADERS = {
     # Request headers

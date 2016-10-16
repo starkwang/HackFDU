@@ -7,8 +7,8 @@ import IndexIcon from 'material-ui/svg-icons/action/home';
 import LoginIcon from 'material-ui/svg-icons/action/perm-identity';
 import SignupIcon from 'material-ui/svg-icons/communication/contacts';
 import PublishIcon from 'material-ui/svg-icons/action/offline-pin';
-import CategoryIcon0 from 'material-ui/svg-icons/action/important-devices';
-import CategoryIcon1 from 'material-ui/svg-icons/hardware/headset';
+import CategoryIcon0 from 'material-ui/svg-icons/action/assignment';
+import CategoryIcon1 from 'material-ui/svg-icons/maps/add-location';
 import CategoryIcon2 from 'material-ui/svg-icons/action/account-balance';
 import CategoryIcon3 from 'material-ui/svg-icons/action/receipt';
 import CategoryIcon4 from 'material-ui/svg-icons/content/weekend';
@@ -49,8 +49,8 @@ export default class SideBar extends React.Component {
                 <MenuItem leftIcon={<IndexIcon/>} onTouchTap={_ => this.toRoute('/')}>
                     主页
                 </MenuItem>
-                <MenuItem leftIcon={<PublishIcon/>} onTouchTap={_ => this.toRoute('/missions')}>任务列表</MenuItem>
-                <MenuItem leftIcon={<PublishIcon/>} onTouchTap={_ => this.toRoute('/createPoint')}>创建地点</MenuItem>
+                <MenuItem leftIcon={<CategoryIcon0/>} onTouchTap={_ => this.toRoute('/missions')}>任务列表</MenuItem>
+                <MenuItem leftIcon={<CategoryIcon1/>} onTouchTap={_ => this.toRoute('/createPoint')}>创建地点</MenuItem>
                 <MenuItem leftIcon={<PublishIcon/>} onTouchTap={_ => this.toRoute('/archievement')}>成就</MenuItem>
                 <Divider/>
                 <Subheader>分类</Subheader>

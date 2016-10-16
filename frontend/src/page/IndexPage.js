@@ -1,7 +1,7 @@
 import React from 'react';
 import {AppBar, RaisedButton} from 'material-ui';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import CheckCircle from 'material-ui/svg-icons/action/check-circle';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import GoogleMap from 'google-map-react';
 import eventProxy from '../service/event';
@@ -159,7 +159,7 @@ export default class IndexPage extends React.Component {
                     }}
                     onClick={this.checkImg}
                 >
-                    <ContentAdd />
+                    <CheckCircle />
                 </FloatingActionButton>
                 <input style={{
                     display: 'none'

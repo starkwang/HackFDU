@@ -24,18 +24,22 @@ export default class CreatePoint extends React.Component {
                 eventProxy.emit('show uploading');
                 console.log(this.result.length);
                 minilize(this.result, mini => {
-                    console.log(mini.split(',')[1].length);
-                    api.point.create({
-                        lat: 31.3015892 + Math.random()*0.01,
-                        lng: 121.5011383 + Math.random()*0.01,
-                        base64: mini.split(',')[1],
-                        intro: intro.value
-                    }).then(result => {
-                        eventProxy.emit('hide uploading');
-                    }).catch(err => {
-                        eventProxy.emit('hide uploading');
-                        alert('超时！');
-                    })
+                    navigator
+                        .geolocation
+                        .getCurrentPosition((result, err) => {
+                            console.log(mini.split(',')[1].length);
+                            api.point.create({
+                                lat: result.coords.latitude - 0.0012,
+                                lng: result.coords.longitude + 0.004,
+                                base64: mini.split(',')[1],
+                                intro: intro.value
+                            }).then(result => {
+                                eventProxy.emit('hide uploading');
+                            }).catch(err => {
+                                eventProxy.emit('hide uploading');
+                                alert('超时！');
+                            })
+                        })
                 })
             }
         }, false);

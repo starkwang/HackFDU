@@ -75,8 +75,8 @@ export default class IndexPage extends React.Component {
                 console.log(result);
                 this.setState(Object.assign(this.state, {
                     myLocation: {
-                        lat: result.coords.latitude,
-                        lng: result.coords.longitude
+                        lat: result.coords.latitude - 0.0012,
+                        lng: result.coords.longitude + 0.004
                     }
                 }))
             })
@@ -96,24 +96,28 @@ export default class IndexPage extends React.Component {
             reader.onload = function (e) {
                 minilize(this.result, mini => {
                     eventProxy.emit('show uploading');
-                    api.point.check({
-                        lat: 31.3015892,
-                        lng: 121.5011383,
-                        base64: mini.split(',')[1]
-                    }).then(result => {
-                        eventProxy.emit('hide uploading');
-                        var result = JSON.parse(result);
-                        if (result.accepted == 1) {
-                            console.log('show alert');
-                            eventProxy.emit('point complete', result['event_id'])
-                        } else {
-                            console.log('show alert');
-                            eventProxy.emit('show alert', '验证失败');
-                        }
-                    }).catch(err => {
-                        eventProxy.emit('hide uploading');
-                        console.log(err);
-                    })
+                    navigator
+                        .geolocation
+                        .getCurrentPosition((result, err) => {
+                            api.point.check({
+                                lat: result.coords.latitude - 0.0012,
+                                lng: result.coords.longitude + 0.004,
+                                base64: mini.split(',')[1]
+                            }).then(result => {
+                                eventProxy.emit('hide uploading');
+                                var result = JSON.parse(result);
+                                if (result.accepted == 1) {
+                                    console.log('show alert');
+                                    eventProxy.emit('point complete', result['event_id'])
+                                } else {
+                                    console.log('show alert');
+                                    eventProxy.emit('show alert', '验证失败');
+                                }
+                            }).catch(err => {
+                                eventProxy.emit('hide uploading');
+                                console.log(err);
+                            })
+                        })
                 })
             }
         }, false);
